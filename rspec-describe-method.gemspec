@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.description   = 'Adds a #describe_method method for use within RSpecs, which set the test subject to the defined method'
   s.version       =  RSpec::DescribeMethod::VERSION
   s.date          = '2013-12-26'
-  s.homepage      = 'http://www.dablweb.com'
+  s.homepage      = 'http://brett-richardson.github.io/rspec-describe-method' # 'http://www.dablweb.com'
   s.authors       = [ 'Brett Richardson' ]
   s.email         = [ 'Brett.Richardson.NZ@gmail.com' ]
   s.require_path  = 'lib'
