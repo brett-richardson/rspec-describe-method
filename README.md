@@ -41,6 +41,51 @@ describe String do
 end
 ```
 
+So what's happening behind the scenes?
+--------------------------------------
+
+Essentially we do a little bit of meta-programming and replace the describe_method with a normal describe and subject call as so:
+
+
+```ruby
+describe User do
+    #--- This... ---------------
+
+    describe_method '#to_s' do
+        it{ should be_a String }
+    end
+
+    #--- Is Equivalent to... ---
+
+    describe '#to_s' do
+        subject{ described_class.new.to_s }
+
+        it{ should be_a String }
+    end
+end
+```
+
+
+```ruby
+describe User do
+    subject( :instance ){ described_class.new }
+
+    #--- This... ----------------
+
+    describe_method '.find', 1 do
+        it{ should be_a User }
+    end
+
+    #--- Is Equivalent to... ----
+
+    describe '.find( 1 )' do
+        subject{ instance.class.find 1 }
+
+        it{ should be_a String )
+    end
+end
+```
+
 
 Describe a method call on the current test `subject` in your specs with 'describe_method', and a `#` for instance methods and a `.` for class methods.
 
