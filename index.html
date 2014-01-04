@@ -70,6 +70,47 @@
 <span class="k">end</span>
 </pre></div>
 
+<h2>
+<a name="so-whats-happening-behind-the-scenes" class="anchor" href="#so-whats-happening-behind-the-scenes"><span class="octicon octicon-link"></span></a>So what's happening behind the scenes?</h2>
+
+<p>Essentially we do a little bit of meta-programming and replace the describe_method with a normal describe and subject call as so:</p>
+
+<div class="highlight highlight-ruby"><pre><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+    <span class="c1">#--- This... ---------------</span>
+
+    <span class="n">describe_method</span> <span class="s1">'#to_s'</span> <span class="k">do</span>
+        <span class="n">it</span><span class="p">{</span> <span class="n">should</span> <span class="n">be_a</span> <span class="nb">String</span> <span class="p">}</span>
+    <span class="k">end</span>
+
+    <span class="c1">#--- Is Equivalent to... ---</span>
+
+    <span class="n">describe</span> <span class="s1">'#to_s'</span> <span class="k">do</span>
+        <span class="n">subject</span><span class="p">{</span> <span class="n">described_class</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">to_s</span> <span class="p">}</span>
+
+        <span class="n">it</span><span class="p">{</span> <span class="n">should</span> <span class="n">be_a</span> <span class="nb">String</span> <span class="p">}</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+
+<div class="highlight highlight-ruby"><pre><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+    <span class="n">subject</span><span class="p">(</span> <span class="ss">:instance</span> <span class="p">){</span> <span class="n">described_class</span><span class="o">.</span><span class="n">new</span> <span class="p">}</span>
+
+    <span class="c1">#--- This... ----------------</span>
+
+    <span class="n">describe_method</span> <span class="s1">'.find'</span><span class="p">,</span> <span class="mi">1</span> <span class="k">do</span>
+        <span class="n">it</span><span class="p">{</span> <span class="n">should</span> <span class="n">be_a</span> <span class="no">User</span> <span class="p">}</span>
+    <span class="k">end</span>
+
+    <span class="c1">#--- Is Equivalent to... ----</span>
+
+    <span class="n">describe</span> <span class="s1">'.find( 1 )'</span> <span class="k">do</span>
+        <span class="n">subject</span><span class="p">{</span> <span class="n">instance</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">find</span> <span class="mi">1</span> <span class="p">}</span>
+
+        <span class="n">it</span><span class="p">{</span> <span class="n">should</span> <span class="n">be_a</span> <span class="nb">String</span> <span class="p">)</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+
 <p>Describe a method call on the current test <code>subject</code> in your specs with 'describe_method', and a <code>#</code> for instance methods and a <code>.</code> for class methods.</p>
 
 <p>Instances will automatically delagate to their class, and classes will automatically create an instance of themselves.</p>
